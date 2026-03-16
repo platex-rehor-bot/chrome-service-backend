@@ -1,3 +1,19 @@
+access-transparency:
+  title: Access Transparency Service
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/access_transparency/v1/openapi.json
+
+accounts-mgmt:
+  title: Accounts Management
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/accounts_mgmt/v1/openapi.json
+
 advisor:
   title: Advisor
   api:
@@ -59,6 +75,22 @@ application-services:
   api:
     isBeta: true
 
+assisted-install:
+  title: Assisted Installer
+  api:
+    github:
+      owner: openshift
+      repo: assisted-service
+      path: swagger.yaml
+
+authorizations:
+  title: Authorizations
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/authorizations/v1/openapi.json
+
 automation-analytics:
   title: Analytics
   api:
@@ -90,6 +122,14 @@ ccx:
         title: Vulnerability
         versions:
           - v1
+
+clusters-mgmt:
+  title: Clusters Management
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/clusters_mgmt/v1/openapi.json
 
 compliance:
   title: Compliance
@@ -147,6 +187,16 @@ image-builder:
     versions:
       - v1
 
+image-builder-composer:
+  title: Image Builder Composer
+  api:
+    url: https://api.openshift.com/api/image-builder-composer/v2/openapi
+
+image-builder-worker:
+  title: Image Builder Worker
+  api:
+    url: https://api.openshift.com/api/image-builder-worker/v1/openapi
+
 notifications:
   title: Notifications
   api:
@@ -159,6 +209,14 @@ openshift:
   api:
     versions:
       - v1
+
+osd-fleet-mgmt:
+  title: OSD Fleet Manager
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/osd_fleet_mgmt/v1/openapi.json
 
 patch:
   title: Patch
@@ -198,6 +256,11 @@ remediations:
     versions:
       - v1
 
+rhacs:
+  title: RHACS Fleet Manager
+  api:
+    url: https://api.openshift.com/api/rhacs/v1/openapi
+
 ros:
   title: Resource Optimization
   api:
@@ -214,11 +277,27 @@ ruledev:
       - value: "experimental"
         title: "Experimental API"
 
+service-logs:
+  title: Service Logs
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/service_logs/v1/openapi.json
+
 sources:
   title: Sources
   api:
     versions:
       - v3.1
+
+status-board:
+  title: Status Board
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/status_board/v1/openapi.json
 
 subscriptions:
   title: Subscriptions
@@ -234,6 +313,11 @@ tasks:
     versions:
       - v1
 
+upgrades-info:
+  title: Upgrades Information
+  api:
+    url: https://api.openshift.com/api/upgrades_info/v1/openapi
+
 vulnerability:
   title: Vulnerability Management
   api:
@@ -245,3 +329,11 @@ malware-detection:
   api:
     versions:
       - v1
+
+web-rca:
+  title: Web RCA
+  api:
+    github:
+      owner: openshift-online
+      repo: ocm-api-model
+      path: openapi/web_rca/v1/openapi.json
