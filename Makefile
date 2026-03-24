@@ -19,6 +19,7 @@ help:
 	@echo "  - port: http server port 'make dev-static-node port=8888'"
 	@echo "audit 		 	- run grype audit on the docker image"
 	@echo "generate-search-index 	- generate search index"
+	@echo "fetch-specs           	- fetch OpenAPI specs into static/specs-generated.json (FEO_API_SPEC)"
 
 port?=8000
 ENV_FILE?=.env
@@ -55,6 +56,9 @@ generate-search-index: export SEARCH_INDEX_WRITE = true
 
 generate-search-index:
 	go run cmd/search/*
+
+fetch-specs:
+	go run cmd/fetchSpecs/fetchSpecs.go
 
 kafka:
 	podman-compose --env-file $(PWD)/$(ENV_FILE) -f $(PWD)/local/kafka-compose.yaml up

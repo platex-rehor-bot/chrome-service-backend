@@ -191,6 +191,54 @@ objects:
               cpu: ${CPU_REQUEST_CHROME_SERVICE}
               memory: ${MEMORY_REQUEST_CHROME_SERVICE}
 
+  # CronJob to fetch and update OpenAPI specs
+  - apiVersion: batch/v1
+    kind: CronJob
+    metadata:
+      name: chrome-fetch-specs
+      labels:
+        app: chrome-service
+    spec:
+      schedule: ${FETCH_SPECS_SCHEDULE}
+      suspend: ${{FETCH_SPECS_SUSPEND}}
+      concurrencyPolicy: "Forbid"
+      successfulJobsHistoryLimit: 3
+      failedJobsHistoryLimit: 3
+      jobTemplate:
+        spec:
+          template:
+            metadata:
+              labels:
+                app: chrome-service
+                job: fetch-specs
+            spec:
+              restartPolicy: OnFailure
+              containers:
+              - name: fetch-specs
+                image: ${IMAGE}:${IMAGE_TAG}
+                command:
+                  - /bin/bash
+                  - -c
+                  - chrome-fetch-specs
+                env:
+                - name: FEO_API_SPEC
+                  valueFrom:
+                    configMapKeyRef:
+                      key: api-specs.json
+                      name: ${FRONTEND_CONTEXT_NAME}
+                      optional: true
+                - name: FETCH_SPECS_TARGET
+                  value: ${FETCH_SPECS_TARGET}
+                - name: FETCH_SPECS_TIMEOUT
+                  value: ${FETCH_SPECS_TIMEOUT}
+                resources:
+                  limits:
+                    cpu: ${CPU_LIMIT_FETCH_SPECS}
+                    memory: ${MEMORY_LIMIT_FETCH_SPECS}
+                  requests:
+                    cpu: ${CPU_REQUEST_FETCH_SPECS}
+                    memory: ${MEMORY_REQUEST_FETCH_SPECS}
+
   # This is a dummy secret to make ephemeral deploy correctly. It will not roll out to stage or prod
   # Unless we set "secret" in "managedResourceTypes" in the app-interface saas file.
   - apiVersion: v1
@@ -255,3 +303,30 @@ parameters:
 - description: Bundles navigation fully onboarded to FEO
   name: FEO_BUNDLES_ONBOARDED_IDS
   value: '["user-preferences"]'
+- description: Enable or disable clowder
+  name: CLOWDER_ENABLED
+  value: 'true'
+- description: Schedule for fetching OpenAPI specs (cron format or @hourly, @daily)
+  name: FETCH_SPECS_SCHEDULE
+  value: "@daily"
+- description: Suspend the fetch-specs CronJob (true to disable)
+  name: FETCH_SPECS_SUSPEND
+  value: 'false'
+- description: Output path for fetched specs
+  name: FETCH_SPECS_TARGET
+  value: "static/specs-generated.json"
+- description: HTTP timeout for fetching specs in seconds
+  name: FETCH_SPECS_TIMEOUT
+  value: "60"
+- description: CPU limit for fetch-specs CronJob
+  name: CPU_LIMIT_FETCH_SPECS
+  value: 200m
+- description: Memory limit for fetch-specs CronJob
+  name: MEMORY_LIMIT_FETCH_SPECS
+  value: 256Mi
+- description: CPU request for fetch-specs CronJob
+  name: CPU_REQUEST_FETCH_SPECS
+  value: 100m
+- description: Memory request for fetch-specs CronJob
+  name: MEMORY_REQUEST_FETCH_SPECS
+  value: 128Mi
