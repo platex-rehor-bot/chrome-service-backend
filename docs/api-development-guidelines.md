@@ -43,7 +43,9 @@ func GetMyResource(w http.ResponseWriter, r *http.Request) {
     user := r.Context().Value(util.USER_CTX_KEY).(models.UserIdentity)
     resources, err := service.GetMyResources(user.ID)
     if err != nil {
-        panic(err)
+        logrus.WithError(err).Error("failed to get resources")
+        http.Error(w, "internal server error", http.StatusInternalServerError)
+        return
     }
     response := util.ListResponse[models.MyResource]{
         Data: resources,
@@ -95,14 +97,14 @@ user := r.Context().Value(util.USER_CTX_KEY).(models.UserIdentity)
 Use the generic response types from `rest/util/responses.go`:
 
 - **List responses**: `util.ListResponse[T]` with `Data` (slice) and `Meta` (count/total)
-- **Single item responses**: Encode the model directly
+- **Single item responses**: `util.EntityResponse[T]` with `Data` (single model)
 
 ### Error Handling
 
 - Return `http.StatusBadRequest` (400) for invalid request bodies
 - Return `http.StatusForbidden` (403) for missing authentication
 - Return `http.StatusNotFound` (404) for missing resources
-- Use `panic()` for unexpected database errors (recovered by chi's `Recoverer` middleware)
+- Reserve `panic()` strictly for application startup failures (e.g., `database.Init()`) — never in request handlers. Return an HTTP error response instead
 - Use structured logging via `logrus` for error context
 
 ### Naming
@@ -118,7 +120,7 @@ Use the generic response types from `rest/util/responses.go`:
 - Use GORM for all database operations via the global `database.DB`
 - Models use soft delete via `gorm.DeletedAt` in `BaseModel`
 - Use `database.DB.Where(...).Find(...)` for queries, `database.DB.Create(...)` for inserts
-- Use `database.DB.Model(&record).Update(...)` for single field updates
+- Use `database.DB.Model(&record).Update(...)` for single-field updates
 - Use `database.DB.Model(&record).Updates(...)` for multi-field updates
 
 ## Testing New Endpoints
