@@ -1,6 +1,6 @@
 # Chrome Service Backend
 
-@AGENTS.md
+See [AGENTS.md](AGENTS.md) for full project architecture, directory structure, API endpoints, and testing conventions.
 
 ## Quick Reference
 
@@ -43,7 +43,7 @@ make clean-all
 - Use `chi.Router` sub-routers with `MakeXxxRoutes(sub chi.Router)` pattern
 - Extract user from context: `user := r.Context().Value(util.USER_CTX_KEY).(models.UserIdentity)`
 - Use `database.DB` global for all GORM operations
-- Error handling: check and return errors, use `panic()` only for unrecoverable DB errors in handlers
+- Error handling: check and return errors explicitly. Prefer returning HTTP error responses to clients (e.g., `http.Error(w, msg, 500)`). Reserve `panic()` strictly for application startup failures (e.g., `database.Init()` cannot connect) where the process cannot continue — never panic in request handlers
 - Logging: use `logrus` (not `log` stdlib) for structured logging
 - Config access: `config.Get()` returns the singleton config pointer
 
