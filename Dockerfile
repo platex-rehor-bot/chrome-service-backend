@@ -24,6 +24,9 @@ RUN CGO_ENABLED=1 go build -o /go/bin/chrome-migrate cmd/migrate/migrate.go
 # Build the search index binary.
 RUN CGO_ENABLED=1 go build -o /go/bin/chrome-search-index cmd/search/publishSearchIndex.go
 
+# Build the fetch specs binary.
+RUN CGO_ENABLED=1 go build -o /go/bin/chrome-fetch-specs cmd/fetchSpecs/fetchSpecs.go
+
 # Pin to a specific version rather than :latest for reproducible builds and to prevent unintended changes
 FROM registry.access.redhat.com/ubi9-minimal:9.7-1776645941@sha256:175bafd5bc7893540ed6234bb979acfe3574fd6570e6762bbc527c757f854cea
 
@@ -38,6 +41,7 @@ RUN chgrp -R 0 /static && \
 COPY --from=builder   /go/bin/chrome-service-backend /app/chrome-service-backend
 COPY --from=builder /go/bin/chrome-migrate /usr/bin
 COPY --from=builder /go/bin/chrome-search-index /usr/bin
+COPY --from=builder /go/bin/chrome-fetch-specs /usr/bin
 # Copy chrome static JSON assets to server binary entry point
 COPY --from=builder $GOPATH/src/chrome-service-backend/static /static
 # Copy widget dashboard defaults to server binary entry point
